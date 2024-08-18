@@ -12,7 +12,7 @@ import Player from "@/components/Player";
 const font = Figtree({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Spotify Clone",
+  title: "pityfy",
   description: "Listen to music",
 };
 
