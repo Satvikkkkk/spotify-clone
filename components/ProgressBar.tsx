@@ -75,7 +75,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         value={[songProgressBar]}
         onValueChange={handleProgressChange}
         onValueCommit={handleProgressCommit}
-        step={duration / 100000}
+        step={1}
         max={duration}
         className="mx-2"
       />
