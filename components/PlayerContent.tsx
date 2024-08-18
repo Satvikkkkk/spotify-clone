@@ -8,8 +8,10 @@ import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
 import Slider from "./Slider";
 import usePlayer from "@/hooks/usePlayer";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSound from "use-sound";
+import ProgressBar from "./ProgressBar";
+import React from "react";
 
 
 interface PlayerContentProps {
@@ -24,6 +26,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const Icon = isPlaying ? BsPauseFill : BsPlayFill;
     const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
+    const [isSoundInitialized, setIsSoundInitialized] = useState(false);
+    
+
 
     const onPlayNext = () => {
         if (player.ids.length === 0) {
@@ -69,6 +74,13 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
         }
     );
 
+   useEffect(() => {
+    if (!isSoundInitialized && sound) {
+      player.setSound(sound);
+      setIsSoundInitialized(true);
+    }
+   }, [sound, isSoundInitialized, player]);
+    
     useEffect(() => {
         sound?.play();
         return () => {
@@ -95,6 +107,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     }
 
 
+
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 h-full">
             <div className="flex w-full justify-start">
@@ -116,13 +129,15 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
                     <Icon size={30} className="text-black" />  
                 </div>
                 <AiFillStepForward onClick={onPlayNext} size={30} className="text-neutral-400 cursor-pointer hover:text-white transition" />
+                 <div className="w-full max-w-xl mx-auto">
+          <ProgressBar sound={player.sound} />
+        </div>
             </div>
             <div className="hidden md:flex sm:flex w-full justify-end pr-2">
                 <div className="flex items-center gap-x-2 w-[120px]">
                     <VolumeIcon onClick={toggleMute} size={34} className="cursor-pointer " />
                     <Slider  value={volume} onChange={(value) => setVolume(value)}/>
                 </div>
-
             </div>
         </div>
     )
